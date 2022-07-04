@@ -33,6 +33,8 @@
 
 ![screenshot](screenshot.png)
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## About
 
 **Easy!Appointments** is a highly customizable web application that allows customers to book appointments with you 

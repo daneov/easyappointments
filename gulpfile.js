@@ -66,10 +66,10 @@ gulp.task('package', (done) => {
     fs.copySync('README.md', 'build/README.md');
     fs.copySync('LICENSE', 'build/LICENSE');
 
-    execSync('cd build && composer install --no-interaction --no-dev --no-scripts --optimize-autoloader', function (err, stdout, stderr) {
-        console.log(stdout);
-        console.log(stderr);
-    });
+    // execSync('cd build && composer install --no-interaction --no-dev --no-scripts --optimize-autoloader', function (err, stdout, stderr) {
+    //     console.log(stdout);
+    //     console.log(stderr);
+    // });
 
     del.sync('**/.DS_Store');
 
