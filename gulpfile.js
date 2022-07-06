@@ -11,11 +11,14 @@
 
 // Gulp instance and plugins.
 const gulp = require('gulp');
+const replace = require('gulp-replace')
+const rename = require('gulp-rename')
 const fs = require('fs-extra');
 const zip = require('zip-dir');
 const plugins = require('gulp-load-plugins')();
 const {execSync} = require('child_process');
 const del = require('del');
+const { src } = require('gulp');
 
 // Gulp error handling.
 const source = gulp.src;
@@ -25,6 +28,24 @@ gulp.src = function () {
             errorHandler: plugins.notify.onError('Error: <%= error.message %>')
         }));
 };
+
+const dbConnection = function() {
+    const dbURL = process.env["JAWSDB_URL"]
+    if (dbURL === undefined) {
+        return undefined
+    }
+
+    return new URL(dbURL)
+}
+
+const replaceWithValue = function(variable, value) {
+    const pattern = new RegExp(`(${variable}\\s+= )'(.+)'`, 'g');
+    return replace(pattern, function(_, prefix, current) {
+       const val = value != undefined ? value : current
+
+       return `${prefix}'${val}'`
+    })
+}
 
 gulp.task('package', (done) => {
     const archive = 'easyappointments-0.0.0.zip';
@@ -70,6 +91,16 @@ gulp.task('package', (done) => {
     //     console.log(stdout);
     //     console.log(stderr);
     // });
+
+    const dbURL = dbConnection()
+    gulp.src(["./config-sample.php"])
+      .pipe(replaceWithValue("BASE_URL", process.env["BASE_URL"]))
+      .pipe(replaceWithValue("DB_HOST", dbURL.hostname))
+      .pipe(replaceWithValue("DB_NAME", dbURL.pathname.replace(/^\/|\/$/, '')))
+      .pipe(replaceWithValue("DB_USERNAME", dbURL.username))
+      .pipe(replaceWithValue("DB_PASSWORD", dbURL.password))
+      .pipe(rename('config.php'))
+      .pipe(gulp.dest('./build'))
 
     del.sync('**/.DS_Store');
 
