@@ -58,6 +58,7 @@ gulp.task('package', (done) => {
     fs.copySync('assets', 'build/assets');
     fs.copySync('engine', 'build/engine');
     fs.copySync('system', 'build/system');
+    fs.copySync('vendor', 'build/vendor');
 
     fs.ensureDirSync('build/storage/backups');
     fs.copySync('storage/backups/.htaccess', 'build/storage/backups/.htaccess');
